@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>翻译</title>
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/font-awesome.min.css" rel="stylesheet">
+		<script src="js/vue.min.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/popper.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/md5.js"></script>
+		<style>
+			.btn-circle {
+				width: 30px;
+				height: 30px;
+				text-align: center;
+				padding: 6px 0;
+				font-size: 12px;
+				line-height: 1.428571429;
+				border-radius: 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app" v-bind:class="night?'text-light':''">
+			<div id="net" class="bg-warning container-fluid" style="display: none;">
+				<div class="row">
+					<div class="col text-center">
+						<span>网络连接中断</span>
+					</div>
+				</div>
+			</div>
+			<header>
+				<div class="container-fluid bg-dark">
+					<div class="row">
+						<div class="col text-left">
+
+						</div>
+						<div class="col text-right">
+							<div class="dropdown">
+								<button class="btn btn-dark btn-lg" data-toggle="dropdown">
+							 <i class="fa fa-align-justify" title="更多"></i>
+							</button>
+								<div class="dropdown-menu dropdown-menu-right">
+									<a href="views/option.html" class="dropdown-item">设置</a>
+									<a href="views/about.html" class="dropdown-item">关于</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</header>
+			<div v-bind:class="night?'jumbotron text-center bg-dark':'jumbotron text-center'" id="title">
+				<h1>T.ranslate</h1>
+			</div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col">
+						<select v-bind:class="night?'form-control bg-dark text-light':'form-control'" v-model="parm.from">
+							<option value="auto">自动检测</option>
+							<option value="zh">中文</option>
+							<option value="en">英文</option>
+							<option value="jp">日语</option>
+							<option value="cht">繁体中文</option>
+							<option value="kor">韩语</option>
+							<option value="fra">法语</option>
+							<option value="de">德语</option>
+						</select>
+					</div>
+					<div class="col-2 text-center">
+						<h6 @click="parm.from=='auto'?'':change()" class="mt-2"><i v-bind:class="parm.from=='auto'?'fa fa-arrow-right':'fa fa-exchange'" aria-hidden="true"></i></h6>
+					</div>
+					<div class="col">
+						<select v-bind:class="night?'form-control bg-dark text-light':'form-control'" v-model="parm.to">
+							<option value="zh">中文</option>
+							<option value="en">英文</option>
+							<option value="jp">日语</option>
+							<option value="cht">繁体中文</option>
+							<option value="kor">韩语</option>
+							<option value="fra">法语</option>
+							<option value="de">德语</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="row mt-3">
+					<div class="col">
+						<textarea v-model="parm.q" rows="5" v-bind:class="night?'form-control text-light bg-dark':'form-control'" placeholder="点按即可输入文本"></textarea>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col text-right">
+						<button @click="parm.q=''" v-bind:style="parm.q.length==0?'position: relative;top: -3em;right: 1em;visibility: hidden;':'position: relative;top: -3em;right: 1em;'" class="btn btn-dark btn-circle" style="">
+							<i class="fa fa-times" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+
+				<div class="row mt-3">
+					<div class="col text-center">
+						<button @click="put" v-bind:class="night?'btn btn-lg btn-block btn-dark':'btn btn-lg btn-block btn-info'">{{net?'翻译':'重新连接'}}<i v-if="flag" class="fa fa-spinner fa-pulse fa-fw"></i></button>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col">
+						<!--记录-->
+
+						<div class="container">
+							<div v-if="allResult.length!=0" class="row mt-3">
+								<div class="col text-right">
+									<button @click="clean" class="btn btn-dark btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></button>
+								</div>
+							</div>
+							<div v-for="item in allResult" night="true" v-bind:class="night?'row mt-3 bg-dark':'row mt-3 bg-light'" style="border-radius: 20px;">
+								<div class="col">
+									<div class="container">
+										<div class="row mt-3">
+											<div class="col">
+												<span>{{item.from}}</span>
+												<i class="fa fa-arrow-right" aria-hidden="true"></i>
+												<span>{{item.to}}</span>
+											</div>
+											<div class="col text-right">
+												<button v-if="item.to=='en'||item.to=='zh'||item.to=='jp'" @click="play(item.trans_result[0].dst,item.to)" v-bind:class="night?'btn btn-sm btn-dark':'btn btn-sm btn-info'"><i class="fa fa-play" aria-hidden="true"></i></button>
+												<button @click="copy" v-bind:class="night?'btn btn-sm btn-dark':'btn btn-sm btn-info'"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+											</div>
+										</div>
+										<hr/>
+										<div class="row mt-1">
+											<div class="col" id="val">
+												<p v-for="obj in item.trans_result">{{obj.dst}}</h1>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="msg" class="container-fluid bg-info text-light" style="position: fixed;bottom: 0px; display: none;">
+				<div class="row" style="">
+					<div class="col text-center">
+						<span>已复制到剪切板</span>
+					</div>
+				</div>
+			</div>
+
+			<div id="audio">
+
+			</div>
+
+			<!-- 模态框 -->
+			<div class="modal fade" id="myModal">
+				<div class="modal-dialog modal-lg ">
+					<div v-bind:class="night?'modal-content bg-dark':'modal-content'">
+
+						<!-- 模态框头部 -->
+						<div class="modal-header">
+							<h4 class="modal-title">关于</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<!-- 模态框主体 -->
+						<div class="modal-body">
+
+						</div>
+
+						<!-- 模态框底部 -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="js/myJs/index.js"></script>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title></title>
+		<link href="../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../css/option.css" rel="stylesheet">
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/popper.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+	</head>
+
+	<body>
+		<div id="app" v-bind:class="night?'text-light':''">
+			<header>
+				<div class="container-fluid bg-dark">
+					<div class="row">
+						<div class="col text-left">
+							<button class="btn btn-dark btn-lg" onclick="saveSpdAndBack()">
+							<i class="fa fa-chevron-left" aria-hidden="true"></i>
+						</button>
+						</div>
+					</div>
+				</div>
+			</header>
+			<div v-bind:class="night?'jumbotron text-center bg-dark':'jumbotron text-center'">
+				<h1>设置</h1>
+			</div>
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<table class="table">
+							<tr>
+								<td>夜间模式</td>
+								<td class="text-right">
+									<div class="switch-container">
+										<input v-model="night" type="checkbox" id="night-switch">
+										<label for="night-switch"></label>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>语音语速</td>
+								<td class="text-right">
+									<input v-model="spd" name="my-checkbox" type="range" step="1" min="1" max="9" />
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/myJs/option.js"></script>
+
+</html>
