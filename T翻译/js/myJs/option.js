@@ -34,6 +34,10 @@ var app = new Vue({
 
 document.addEventListener('plusready', function() {
 	//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+	$("#anim").slideUp(function() {
+				$(this).css({"width":0,"height":0});
+				$(this).show()
+			})
 	plus.key.addEventListener('backbutton', function() {
 		saveSpdAndBack();
 	}, false);
@@ -133,7 +137,7 @@ function saveSpdAndBack(){
 						//console.log(app.spd)
 						init.spd = app.spd;
 						writer.write(JSON.stringify(init));
-						history.back(-1);
+						hrefToOfAnim();
 					}
 				}, function(e) {
 					alert(e.message)
@@ -142,5 +146,11 @@ function saveSpdAndBack(){
 		});
 	}, function(e) {
 		alert("Request file system failed: " + e.message);
+	});
+}
+
+function hrefToOfAnim(){
+	$("#anim").animate({width:document.body.clientWidth,height:document.body.clientHeight},function () {
+		history.back(-1);
 	});
 }

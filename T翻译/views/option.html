@@ -15,7 +15,9 @@
 	</head>
 
 	<body>
-		<div id="app" v-bind:class="night?'text-light':''">
+		<div id="app" v-bind:style="'min-height:800px'"  v-bind:class="night?'text-light':''">
+			<div id="anim" v-bind:class="night?'bg-dark':'bg-light'" v-bind:style="night?'z-index:999;position: fixed;left:0px;height:100%;width:100%':'z-index:999;position: fixed;left:0px;height:100%;width:100%'">
+			</div>
 			<header>
 				<div class="container-fluid bg-dark">
 					<div class="row">

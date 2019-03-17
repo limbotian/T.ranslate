@@ -11,23 +11,17 @@
 		<script src="../js/jquery.min.js"></script>
 		<script src="../js/popper.min.js"></script>
 		<script src="../js/bootstrap.min.js"></script>
-		<script>
-			document.addEventListener('plusready', function() {
-				//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
-				plus.key.addEventListener('backbutton', function() {
-					history.back(-1)
-				}, false);
-			});
-		</script>
 	</head>
 
 	<body>
 		<div id="app" v-bind:class="night?'text-light':''">
+			<div id="anim" v-bind:class="night?'bg-dark':'bg-light'" v-bind:style="night?'z-index:999;position: fixed;left:0px;height:100%;width:100%':'z-index:999;position: fixed;left:0px;height:100%;width:100%'">
+			</div>
 			<header>
 				<div class="container-fluid bg-dark">
 					<div class="row">
 						<div class="col text-left">
-							<button class="btn btn-dark btn-lg" onclick="history.back(-1)">
+							<button class="btn btn-dark btn-lg" onclick="hrefToOfAnim()">
 							<i class="fa fa-chevron-left" aria-hidden="true"></i>
 						</button>
 						</div>
@@ -36,7 +30,7 @@
 			</header>
 			<div v-bind:class="night?'jumbotron text-center bg-dark':'jumbotron text-center'">
 				<h1>T翻译</h1>
-				<h4>v2.0</h4>
+				<h4>v2.1</h4>
 				<a class="text-info" onclick="openCoolPlay()">查看最新版本</a>
 			</div>
 			<div class="container-fluid text-center">
@@ -65,6 +59,8 @@
 								<td>把js扩展到手机App的原生世界</td>
 							</tr>
 						</table>
+						<span @click="plus.runtime.openWeb('https://github.com/limbotian/T.ranslate')" class="text-info"><i class="fa fa-github" aria-hidden="true"></i><br />OpenSource</span>
+						<br />
 						<span>Email:limbotian6233@gmail.com</span>
 						<p>© 2019 Limbotian. All Rights Reserved</p>
 					</div>
@@ -81,9 +77,13 @@
 
 		document.addEventListener('plusready', function() {
 			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			$("#anim").slideUp(function() {
+				$(this).css({"width":0,"height":0});
+				$(this).show()
+			})
 			plus.key.addEventListener('backbutton', function() {
 				//saveSpdAndBack();
-				history.back(-1);
+				hrefToOfAnim();
 			}, false);
 			loadMs();
 
@@ -147,6 +147,15 @@
 				});
 			}, function(e) {
 				alert("Request file system failed: " + e.message);
+			});
+		}
+
+		function hrefToOfAnim() {
+			$("#anim").animate({
+				width: document.body.clientWidth,
+				height: document.body.clientHeight
+			}, function() {
+				history.back(-1);
 			});
 		}
 	</script>

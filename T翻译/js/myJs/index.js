@@ -1,5 +1,9 @@
 document.addEventListener('plusready', function() {
 	//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+	$("#anim").slideUp(function() {
+				$(this).css({"width":0,"height":0});
+				$(this).show()
+			})
 	plus.key.addEventListener('backbutton', function() {
 		confirm("确定要离开我吗?") ? plus.runtime.quit() : "";
 	}, false);
@@ -66,6 +70,39 @@ var app = new Vue({
 
 	},
 	methods: {
+		cleanCurrentObj(index){
+			plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fs) {
+						// 可通过fs操作PRIVATE_DOC文件系统 
+						// ......
+						fs.root.getFile('config.json', {
+							create: true
+						}, function(fileEntry) {
+							fileEntry.file(function(file) {
+
+								fileEntry.createWriter(function(writer) {
+									writer.onwrite = function(e) {
+										//console.log("Write data success!");
+									};
+									// Write data to the end of file
+									//writer.seek(writer.length)
+
+									var fileReader = new plus.io.FileReader();
+									fileReader.readAsText(file, 'utf-8');
+									fileReader.onloadend = function(evt) {
+										var init = JSON.parse(evt.target.result);
+										init.allResult.splice(index, 1);
+										writer.write(JSON.stringify(init));
+										app.allResult=init.allResult;
+									}
+								}, function(e) {
+									alert(e.message)
+								});
+							});
+						});
+					}, function(e) {
+						alert("Request file system failed: " + e.message);
+					});
+		},
 		play(val, lan) {
 			var obj = "<audio id=\"tts_autio_id\" autoplay=\"autoplay\"><source id=\"tts_source_id\" src=\"http://tts.baidu.com/text2audio?lan=" + lan + "&ie=UTF-8&spd=" + this.spd + "&text=" + val + "\" type=\"audio/mpeg\"><embed id=\"tts_embed_id\" height=\"0\" width=\"0\"></audio>";
 			$("#audio").empty();
@@ -225,4 +262,11 @@ function copyText(text, callback) { // text: 要复制的内容， callback: 回
 	if(callback) {
 		callback(text)
 	}
+}
+
+
+function hrefToOfAnim(href){
+	$("#anim").animate({height:document.body.clientHeight,width:document.body.clientWidth},function () {
+		window.location.href=href;
+	});
 }

@@ -25,8 +25,10 @@
 		</style>
 	</head>
 
-	<body>
+	<body style="transition: all 0.3s">
 		<div id="app" v-bind:class="night?'text-light':''">
+			<div id="anim" v-bind:class="night?'bg-dark':'bg-light'" v-bind:style="night?'z-index:999;position: fixed;left:0px;height:100%;width:100%':'z-index:999;position: fixed;left:0px;height:100%;width:100%'">
+			</div>
 			<div id="net" class="bg-warning container-fluid" style="display: none;">
 				<div class="row">
 					<div class="col text-center">
@@ -46,8 +48,8 @@
 							 <i class="fa fa-align-justify" title="更多"></i>
 							</button>
 								<div class="dropdown-menu dropdown-menu-right">
-									<a href="views/option.html" class="dropdown-item">设置</a>
-									<a href="views/about.html" class="dropdown-item">关于</a>
+									<a onclick="hrefToOfAnim('views/option.html')" class="dropdown-item">设置</a>
+									<a onclick="hrefToOfAnim('views/about.html')" class="dropdown-item">关于</a>
 								</div>
 							</div>
 						</div>
@@ -113,10 +115,10 @@
 						<div class="container">
 							<div v-if="allResult.length!=0" class="row mt-3">
 								<div class="col text-right">
-									<button @click="clean" class="btn btn-dark btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></button>
+									<button @click="clean" class="btn btn-danger btn-sm btn-circle"><i class="fa fa-trash" aria-hidden="true"></i></button>
 								</div>
 							</div>
-							<div v-for="item in allResult" night="true" v-bind:class="night?'row mt-3 bg-dark':'row mt-3 bg-light'" style="border-radius: 20px;">
+							<div v-for="(item,index) in allResult" night="true" v-bind:class="night?'row mt-3 bg-dark':'row mt-3 bg-light'" v-bind:style="night?'border-radius: 20px;box-shadow:0 14px 26px -12px rgba(153, 153, 153, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(153, 153, 153, 0.2)':'border-radius: 20px;box-shadow:0 14px 26px -12px rgba(250, 250, 250, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(250, 250, 250, 0.2);'">
 								<div class="col">
 									<div class="container">
 										<div class="row mt-3">
@@ -126,8 +128,9 @@
 												<span>{{item.to}}</span>
 											</div>
 											<div class="col text-right">
-												<button v-if="item.to=='en'||item.to=='zh'||item.to=='jp'" @click="play(item.trans_result[0].dst,item.to)" v-bind:class="night?'btn btn-sm btn-dark':'btn btn-sm btn-info'"><i class="fa fa-play" aria-hidden="true"></i></button>
-												<button @click="copy" v-bind:class="night?'btn btn-sm btn-dark':'btn btn-sm btn-info'"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+												<button v-if="item.to=='en'||item.to=='zh'||item.to=='jp'" @click="play(item.trans_result[0].dst,item.to)" v-bind:class="night?'btn btn-sm btn-dark btn-circle':'btn btn-sm btn-info btn-circle'"><i class="fa fa-play" aria-hidden="true"></i></button>
+												<button @click="copy" v-bind:class="night?'btn btn-sm btn-dark btn-circle':'btn btn-sm btn-info btn-circle'"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+												<button @click="cleanCurrentObj(index)" v-bind:class="night?'btn btn-sm btn-dark btn-circle':'btn btn-sm btn-info btn-circle'"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
 											</div>
 										</div>
 										<hr/>
@@ -173,7 +176,7 @@
 
 						<!-- 模态框底部 -->
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+							<button type="button" class="btn btn-secondary" style="" data-dismiss="modal">关闭</button>
 						</div>
 
 					</div>
